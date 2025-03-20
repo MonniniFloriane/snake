@@ -74,7 +74,7 @@ class Serpent {
 
         $stmt->execute();
         $result = $stmt->get_result();
-        $serpents = $result->fetch_all(MYSQLI_ASSOC);
+        $serpents = $result->fetch_all(MYSQLI_ASSOC); // Récupère tous les résultats sous forme de tableau associatif
         $stmt->close();
 
         return $serpents; // Retourne un tableau de serpents

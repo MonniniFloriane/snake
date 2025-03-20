@@ -30,14 +30,23 @@ $total_par_genre = Serpent::compterSerpentsParGenre($db);
 <head>
     <meta charset="utf-8">
     <title>Serpentin</title>
+
+<!--    <link href="style.css" rel="stylesheet">-->
     <!--Bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="container mt-5 mb-5 border border-dark-subtle rounded-3 p-0">
+<body class="ombre container mt-5 mb-5 border border-dark-subtle rounded-3 p-0">
+
+<style>
+    .ombre {
+        box-shadow: 12px 12px maroon;
+    }
+    html {
+        background-image: url('img/snake.jpg');
+    }
+</style>
 
 <header>
     <nav class="navbar bg-body-tertiary mb-5">
@@ -192,7 +201,25 @@ $total_par_genre = Serpent::compterSerpentsParGenre($db);
             <tbody class="table-group-divider">
             <?php if (is_array($serpents) && !empty($serpents)) { ?>
                 <?php foreach ($serpents as $serpent) { ?>
-                    <!-- Afficher les serpents -->
+                    <tr>
+                        <td><?php echo htmlspecialchars($serpent['name']); ?></td>
+                        <td><?php echo htmlspecialchars($serpent['weight']); ?></td>
+                        <td><?php echo htmlspecialchars($serpent['life_time']); ?></td>
+                        <?php $date = new DateTime($serpent['birth']); ?>
+                        <td><?php echo htmlspecialchars($date->format("d/m/Y H:i")); ?></td>
+                        <td><?php echo htmlspecialchars($serpent['race']); ?></td>
+                        <td><?php echo htmlspecialchars($serpent['gender']); ?></td>
+                        <td colspan="2">
+                            <a href="add_modify.php?id_serpent=<?php echo $serpent['id_serpent']; ?>" class="btn btn-secondary fw-bold">
+                                <i class="fa-solid fa-pencil"></i>
+                                MODIFIER
+                            </a>
+                            <a href="remove.php?id_serpent=<?php echo $serpent['id_serpent']; ?>" class="btn btn-outline-danger">
+                                <i class="fa-solid fa-trash-can"></i>
+                                SUPPRIMER
+                            </a>
+                        </td>
+                    </tr>
                 <?php } ?>
             <?php } else { ?>
                 <tr>
