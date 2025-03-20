@@ -1,0 +1,9 @@
+/*Classe*/
+.tab_toto {
+    display: flex;
+    gap: 1rem;
+}
+
+html {
+    background-image: url('/img/snake.jpg') !important;
+}
