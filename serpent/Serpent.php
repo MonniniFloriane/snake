@@ -23,18 +23,57 @@ class Serpent {
         $this->gender = $gender;
     }
 
+
     public function ajouterOuModifier($db) {
+        // Debug des données
+        error_log("Tentative de modification/ajout - ID: " . $this->id_serpent);
+        error_log("Données: " . print_r([
+                'name' => $this->name,
+                'weight' => $this->weight,
+                'life_time' => $this->life_time,
+                'birth' => $this->birth,
+                'race' => $this->race,
+                'gender' => $this->gender
+            ], true));
+
         if ($this->id_serpent) {
             // Modification
             $stmt = $db->prepare("UPDATE serpent SET name=?, weight=?, life_time=?, birth=?, race=?, gender=? WHERE id_serpent=?");
-            $stmt->bind_param('siissi', $this->name, $this->weight, $this->life_time, $this->birth, $this->race, $this->gender, $this->id_serpent);
+            if (!$stmt) {
+                error_log("Erreur préparation UPDATE: " . $db->error);
+                return false;
+            }
+            $stmt->bind_param('siissii',
+                $this->name,
+                $this->weight,
+                $this->life_time,
+                $this->birth,
+                $this->race,
+                $this->gender,
+                $this->id_serpent);
         } else {
             // Ajout
             $stmt = $db->prepare("INSERT INTO serpent (name, weight, life_time, birth, race, gender) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param('siisss', $this->name, $this->weight, $this->life_time, $this->birth, $this->race, $this->gender);
+            if (!$stmt) {
+                error_log("Erreur préparation INSERT: " . $db->error);
+                return false;
+            }
+            $stmt->bind_param('siisss',
+                $this->name,
+                $this->weight,
+                $this->life_time,
+                $this->birth,
+                $this->race,
+                $this->gender);
         }
-        $stmt->execute();
+
+        $result = $stmt->execute();
+        if (!$result) {
+            error_log("Erreur exécution: " . $stmt->error);
+        }
         $stmt->close();
+
+        return $result;
     }
 
     public static function supprimer($db, $id_serpent) {
@@ -80,6 +119,22 @@ class Serpent {
         return $serpents; // Retourne un tableau de serpents
     }
 
+    public static function obtenirSerpentParId($db, $id_serpent) {
+        $stmt = $db->prepare("SELECT * FROM serpent WHERE id_serpent = ?");
+        $stmt->bind_param("i", $id_serpent);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $serpent = $result->fetch_assoc();
+        $stmt->close();
+
+        // Convertit la date au format datetime-local
+        if ($serpent && isset($serpent['birth'])) {
+            $serpent['birth'] = date('Y-m-d\TH:i', strtotime($serpent['birth']));
+        }
+
+        return $serpent;
+    }
+
     public static function compterSerpents($db, $filtre_genre = "", $filtre_race = "") {
         $query = "SELECT COUNT(*) as total FROM serpent WHERE 1=1";
 
@@ -120,5 +175,38 @@ class Serpent {
             }
         }
         return $counts;
+    }
+
+    public static function compterSerpentsParRace($db) {
+        $query = "SELECT race, COUNT(*) as count FROM serpent GROUP BY race";
+        $result = $db->query($query);
+
+        // Initialisation du tableau avec toutes les races possibles à 0
+        $counts = [
+            'Python' => 0,
+            'Boa' => 0,
+            'Cobra' => 0,
+            'Venimous' => 0
+        ];
+
+        while ($row = $result->fetch_assoc()) {
+            // On met à jour le compteur pour la race correspondante
+            if (isset($counts[$row['race']])) {
+                $counts[$row['race']] = $row['count'];
+            }
+        }
+
+        return $counts;
+    }
+
+    public static function debugConnection($db) {
+        echo "Statut connexion MySQL: ";
+        echo $db->ping() ? "Connecté" : "Non connecté";
+        echo "<br>Dernière erreur: " . $db->error;
+
+        // Testez une requête simple
+        $result = $db->query("SELECT 1");
+        echo "<br>Test requête: ";
+        echo $result ? "Réussi" : "Échec (" . $db->error . ")";
     }
 }

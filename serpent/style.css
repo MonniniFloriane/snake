@@ -1,13 +1,44 @@
 /*Classe*/
-.tab_toto {
-    display: flex;
-    gap: 1rem;
-}
-
 html {
-    background-image: url('/img/snake.jpg') !important;
+    background-image: url('img/snake.jpg');
+    background-size: cover;
+    background-position: center;
+}
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #F4EFE9;
 }
 
-.ombre {
-    box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+h2 {
+    font-weight: bold;
+}
+
+h2, label{
+    color: #343509;
+    text-transform: uppercase;
+}
+
+.bgHeader {
+    background-color: #CE9152;
+}
+
+body {
+    background-color: #F4EFE9;
+    border : 2px solid #CE9152;
+}
+
+.btnAdd {
+    background-color: #343509;
+    color: #F4EFE9;
+}
+
+.btnFiltre {
+    background-color: #CE9152;
+    color: #F4EFE9;
+}
+
+.thead {
+    color: #343509;
 }

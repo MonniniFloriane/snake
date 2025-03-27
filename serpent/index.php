@@ -22,6 +22,9 @@ $total_pages = ceil($total_serpents / $par_page);
 
 // Récupérer les totaux par genre
 $total_par_genre = Serpent::compterSerpentsParGenre($db);
+
+// Récuperer les totaux par race
+$total_par_race = Serpent::compterSerpentsParRace($db);
 ?>
 
 <!DOCTYPE html>
@@ -35,56 +38,10 @@ $total_par_genre = Serpent::compterSerpentsParGenre($db);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <!--<link href="style.css" rel="stylesheet">-->
+    <link href="style.css" rel="stylesheet">
 </head>
 
 <body class="container mt-5 mb-5 rounded-3 p-0">
-
-<style>
-    html {
-        background-image: url('img/snake.jpg');
-        background-size: cover;
-        background-position: center;
-    }
-    h1 {
-        text-align: center;
-        text-transform: uppercase;
-        font-weight: bold;
-        color: #F4EFE9;
-    }
-
-    h2 {
-        font-weight: bold;
-    }
-
-    h2, label{
-        color: #343509;
-        text-transform: uppercase;
-    }
-
-    .bgHeader {
-        background-color: #CE9152;
-    }
-
-    body {
-        background-color: #F4EFE9;
-        border : 2px solid #CE9152;
-    }
-
-    .btnAdd {
-        background-color: #343509;
-        color: #F4EFE9;
-    }
-
-    .btnFiltre {
-        background-color: #CE9152;
-        color: #343509;
-    }
-
-    .thead {
-        color: #343509;
-    }
-</style>
 
 <header>
     <div class="bgHeader rounded-2 mb-5 p-3">
@@ -120,8 +77,8 @@ $total_par_genre = Serpent::compterSerpentsParGenre($db);
                     </div>
                     <div class="col-6">
                         <label for="birth" class="form-label fw-bold">Date de Naissance :</label>
-                        <input type="datetime-local" id="birth" class="form-control" name="birth" min="0"
-                               required>
+                        <input type="datetime-local" id="birth" class="form-control" name="birth"
+                               max="<?php echo date('Y-m-d\TH:i'); ?>" required>
                     </div>
                 </div>
                 <!--col3-->
@@ -258,6 +215,12 @@ $total_par_genre = Serpent::compterSerpentsParGenre($db);
                 <th class="text-uppercase fw-bold table-active">Total par genre :</th>
                 <td>Mâles : <?php echo $total_par_genre['male']; ?></td>
                 <td>Femelles : <?php echo $total_par_genre['femelle']; ?></td>
+
+                <th class="text-uppercase fw-bold table-active">Total par race :</th>
+                <td>Python: <?php echo $total_par_race['Python']; ?></td>
+                <td>Boa: <?php echo $total_par_race['Boa']; ?></td>
+                <td>Cobra: <?php echo $total_par_race['Cobra']; ?></td>
+                <td>Venimous: <?php echo $total_par_race['Venimous']; ?></td>
             </tr>
             </tfoot>
         </table>
